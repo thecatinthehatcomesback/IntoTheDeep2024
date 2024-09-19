@@ -6,6 +6,7 @@ repositories {
     }
     maven { url = 'https://maven.brott.dev/' }
     maven { url 'https://jitpack.io' }
+    maven { url = 'https://maven.brott.dev/' }
 }
 
 dependencies {
@@ -23,7 +24,9 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation('com.acmerobotics.dashboard:dashboard:0.4.10') {
         exclude group: 'org.firstinspires.ftc'
+
     }
     implementation 'com.github.Thermal-Equilibrium:homeostasis-FTC:1.0.8'
+    implementation 'com.acmerobotics.dashboard:dashboard:0.4.16'
 }
 
