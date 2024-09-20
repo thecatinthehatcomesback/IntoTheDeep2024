@@ -1,12 +1,16 @@
 package org.firstinspires.ftc.teamcode.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.teamcode.drive.CatMecanumDrive;
 
 import java.util.concurrent.TimeUnit;
 
@@ -35,10 +39,10 @@ public class NewOdo extends LinearOpMode
         robot = new CatHW_Async();
     }
 
-
+    SparkFunOTOS myOtos;
 
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void   runOpMode() throws InterruptedException {
 
         // Informs driver the robot is trying to init
         telemetry.addData("Status", "Initializing...");
@@ -48,30 +52,29 @@ public class NewOdo extends LinearOpMode
         Telemetry dashboardTelemetry = dashboard.getTelemetry();
 
 
-
         // Initialize the hardware
         robot.init(hardwareMap, this);
-        public void runOpMode() throws InterruptedException {
-            // Get a reference to the sensor
-            myOtos = hardwareMap.get(SparkFunOTOS.class, "sensor_otos");
+        // Get a reference to the sensor
+        myOtos = hardwareMap.get(SparkFunOTOS.class, "sensor_otos");
 
-            // All the configuration for the OTOS is done in this helper method, check it out!
-            configureOtos();
+        // All the configuration for the OTOS is done in this helper method, check it out!
+        configureOtos();
+
         // Finished!  Now tell the driver...
         telemetry.addData("Status", "Initialized...  BOOM!");
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
-         ElapsedTime delayTimer = new ElapsedTime();
+        ElapsedTime delayTimer = new ElapsedTime();
 
-        while(!opModeIsActive() && !isStopRequested()){
+        while (!opModeIsActive() && !isStopRequested()) {
             if (((gamepad1.x) && delayTimer.seconds() > 0.8)) {
                 delayTimer.reset();
 
                 // Changes Alliance Sides
                 CatHW_Async.isRedAlliance = !CatHW_Async.isRedAlliance;
             }
-            telemetry.addData("Alliance","%s",CatHW_Async.isRedAlliance?"Red":"Blue");
+            telemetry.addData("Alliance", "%s", CatHW_Async.isRedAlliance ? "Red" : "Blue");
             telemetry.update();
 
             if (CatHW_Async.isRedAlliance) {
@@ -88,7 +91,6 @@ public class NewOdo extends LinearOpMode
         }
 
 
-
         // Go! (Presses PLAY)
         elapsedGameTime.time(TimeUnit.SECONDS);
         elapsedGameTime.reset();
@@ -101,7 +103,6 @@ public class NewOdo extends LinearOpMode
         boolean endGame = false;
         boolean under10Sec = false;
         boolean alignMode = false;
-
 
 
         ElapsedTime buttontime = new ElapsedTime();
@@ -126,11 +127,11 @@ public class NewOdo extends LinearOpMode
             // Driver 1 Controls:
             //-----------------------------------------------------------------------------------
 
-            if(elapsedGameTime.time() > 90 && CatHW_Async.isRedAlliance && !endGame){
+            if (elapsedGameTime.time() > 90 && CatHW_Async.isRedAlliance && !endGame) {
                 //robot.lights.blink(15, RevBlinkinLedDriver.BlinkinPattern.RED,1000 );
                 endGame = true;
 
-            }else if(elapsedGameTime.time() > 90 && !CatHW_Async.isRedAlliance && ! endGame){
+            } else if (elapsedGameTime.time() > 90 && !CatHW_Async.isRedAlliance && !endGame) {
                 //robot.lights.blink(15, RevBlinkinLedDriver.BlinkinPattern.BLUE,1000 );
                 endGame = true;
             }
@@ -148,11 +149,11 @@ public class NewOdo extends LinearOpMode
             double forward = -((Math.abs(gamepad1.right_stick_y) < 0.05) ? 0 : gamepad1.right_stick_y);
             //forward = forward - (gamepad1.left_bumper? 1.0 : 0) * 0.3 + (gamepad1.right_bumper? 1.0:0) *.3;
             double strafe = ((Math.abs(gamepad1.right_stick_x) < 0.05) ? 0 : gamepad1.right_stick_x);
-            if(gamepad1.dpad_left){
+            if (gamepad1.dpad_left) {
                 strafe = strafe - 0.5;
-            }else if(gamepad1.dpad_right){
+            } else if (gamepad1.dpad_right) {
                 strafe = strafe + 0.5;
-            }else if(gamepad1.dpad_up){
+            } else if (gamepad1.dpad_up) {
                 forward = forward + .4;
             } else if (gamepad1.dpad_down) {
                 forward = forward - 0.4;
@@ -177,19 +178,19 @@ public class NewOdo extends LinearOpMode
             currentTime = elapsedGameTime.milliseconds();
             avgT1 = avgT1 * 0.9 + (currentTime - lastTime) * 0.1;
 
-            if(gamepad1.a){
+            if (gamepad1.a) {
                 alignMode = true;
             }
             // DRIVE!!!
             robot.drive.updateDistance();
-            if(alignMode){
-                if(Math.abs(forward) > .1 || Math.abs(strafe) > 0.1 || Math.abs(turn) > .1){
+            if (alignMode) {
+                if (Math.abs(forward) > .1 || Math.abs(strafe) > 0.1 || Math.abs(turn) > .1) {
                     alignMode = false;
-                }else{
+                } else {
                     alignMode = robot.drive.scoreHexTeleop();
 
                 }
-            }else{
+            } else {
                 robot.drive.setMotorPowers(leftFront, leftBack, rightBack, rightFront);
 
             }
@@ -197,70 +198,69 @@ public class NewOdo extends LinearOpMode
             avgT2 = avgT2 * 0.9 + (currentTime - lastTime) * 0.1;
 
 
-            /*if (gamepad1.x) {
-                robot.launch.launch();
-            } else{
-                robot.launch.arm();
-            }*/
-            /*if(gamepad1.left_trigger > .01){
-                robot.jaws.setRobotLift(0, gamepad1.left_trigger);
-            } else if(gamepad1.right_trigger > .01){
-                robot.jaws.setRobotLift(0, -gamepad1.right_trigger);
-            }else {
-                robot.jaws.setRobotLift(0,0);
-            }
-            if(gamepad1.left_trigger > .01){
-                robot.jaws.setRobotLift(0, gamepad1.left_trigger);
-            } else if(gamepad1.right_trigger > .01){
-                robot.jaws.setRobotLift(0, -gamepad1.right_trigger);
-            }else {
-                robot.jaws.setRobotLift(0,0);
-            }*/
-
+        /*if (gamepad1.x) {
+            robot.launch.launch();
+        } else{
+            robot.launch.arm();
+        }*/
+        /*if(gamepad1.left_trigger > .01){
+            robot.jaws.setRobotLift(0, gamepad1.left_trigger);
+        } else if(gamepad1.right_trigger > .01){
+            robot.jaws.setRobotLift(0, -gamepad1.right_trigger);
+        }else {
+            robot.jaws.setRobotLift(0,0);
+        }
+        if(gamepad1.left_trigger > .01){
+            robot.jaws.setRobotLift(0, gamepad1.left_trigger);
+        } else if(gamepad1.right_trigger > .01){
+            robot.jaws.setRobotLift(0, -gamepad1.right_trigger);
+        }else {
+            robot.jaws.setRobotLift(0,0);
+        }*/
 
 
             //--------------------------------------------------------------------------------------
             // Driver 2 Controls:
             //--------------------------------------------------------------------------------------
-            if(gamepad2.dpad_down){
+            if (gamepad2.dpad_down) {
                 robot.jaws.autoSetHexZero();
-            } else if(gamepad2.dpad_up){
+            } else if (gamepad2.dpad_up) {
                 robot.jaws.setHexLiftHigh();
-            }else if(gamepad2.dpad_left){
+            } else if (gamepad2.dpad_left) {
                 robot.jaws.setHexLiftMiddle();
             }
 
-            if(gamepad2.left_trigger > .1){
+            if (gamepad2.left_trigger > .1) {
                 robot.jaws.setIntakePower(-1);
-            } else if(gamepad2.right_trigger >.1){
+            } else if (gamepad2.right_trigger > .1) {
                 robot.jaws.setIntakePower(1);
-            }else {
+            } else {
                 robot.jaws.setIntakePower(0);
             }
 
-            if(gamepad2.x){
+            if (gamepad2.x) {
                 robot.jaws.dispence();
             } else {
                 robot.jaws.zeroPos();
             }
-            if(gamepad2.right_stick_y > .1){
-                robot.jaws.setRobotLift(0,gamepad2.right_stick_y);
-            }else if(gamepad2.right_stick_y < .1){
-                robot.jaws.setRobotLift(0,gamepad2.right_stick_y);
+            if (gamepad2.right_stick_y > .1) {
+                robot.jaws.setRobotLift(0, gamepad2.right_stick_y);
+            } else if (gamepad2.right_stick_y < .1) {
+                robot.jaws.setRobotLift(0, gamepad2.right_stick_y);
 
-            } else{
-                robot.jaws.setRobotLift(0,0);
+            } else {
+                robot.jaws.setRobotLift(0, 0);
             }
 
-            if(-gamepad2.left_stick_y > .1){
+            if (-gamepad2.left_stick_y > .1) {
                 robot.jaws.bumpHexHeight(30);
             } else if (-gamepad2.left_stick_y < -0.1) {
                 robot.jaws.bumpHexHeight(-30);
             }
 
-            if(gamepad2.a && endGame){
+            if (gamepad2.a && endGame) {
                 robot.jaws.launchDrone();
-            }else{
+            } else {
                 robot.jaws.droneSet();
             }
             currentTime = elapsedGameTime.milliseconds();
@@ -271,18 +271,106 @@ public class NewOdo extends LinearOpMode
             //--------------------------------------------------------------------------------------
             //telemetry.addData("Power", "LF %.2f RF %.2f LB %.2f RB %.2f", robot.drive.leftFrontMotor.getPower(), robot.drive.rightFrontMotor.getPower(),robot.drive.leftRearMotor.getPower(),robot.drive.rightRearMotor.getPower());
             //telemetry.addData("Power", "LF %s RF %s LB %s RB %s", robot.drive.leftFrontMotor.getDirection().toString(), robot.drive.rightFrontMotor.getDirection().toString(),robot.drive.leftRearMotor.getDirection().toString(),robot.drive.rightRearMotor.getDirection().toString());
+            SparkFunOTOS.Pose2D pos = myOtos.getPosition();
+            telemetry.addData("Game Timer", "%.2f", elapsedGameTime.time());
+            telemetry.addData("Trigger", "Left %.2f right %.2f", gamepad1.left_trigger, gamepad1.right_trigger);
+            telemetry.addData("Lift", "%.2f power", (float) robot.jaws.liftHook.getPower());
+            telemetry.addData("Hex Lift", "cur: %d Tar: %d pow: %.1f", robot.jaws.hexLift.getCurrentPosition(), robot.jaws.hexLift.getTargetPosition(), robot.jaws.hexLift.getPower());
+            telemetry.addData("Distance", "L: %.2f R: %.2f", robot.drive.leftInches, robot.drive.rightInches);
+            telemetry.addData("Loop Time", "%3.0f ms  %3.0f/%3.0f/%3.0f", avgLoopTime, avgT1, avgT2, avgT3);
+            telemetry.addData("X/Y/Theta", "%3.1f %3.1f %3.1f",pos.x,pos.y,pos.h);
 
-            telemetry.addData("Game Timer","%.2f",elapsedGameTime.time());
-            telemetry.addData("Trigger", "Left %.2f right %.2f" , gamepad1.left_trigger,gamepad1.right_trigger);
-            telemetry.addData("Lift", "%.2f power",(float)robot.jaws.liftHook.getPower());
-            telemetry.addData("Hex Lift","cur: %d Tar: %d pow: %.1f",robot.jaws.hexLift.getCurrentPosition(), robot.jaws.hexLift.getTargetPosition(), robot.jaws.hexLift.getPower());
-            telemetry.addData("Distance","L: %.2f R: %.2f", robot.drive.leftInches, robot.drive.rightInches);
-            telemetry.addData("Loop Time", "%3.0f ms  %3.0f/%3.0f/%3.0f",avgLoopTime,avgT1,avgT2,avgT3);
-            telemetry.addData("X/Y/Theta", "%3.1f %3.1f %3.1f",avgLoopTime,avgT1,avgT2,avgT3);
+            CatMecanumDrive drive = robot.drive;
+            drive.update();
+            Pose2d odo = drive.getPoseEstimate();
+            telemetry.addData("X/Y/Theta", "%3.1f %3.1f %3.1f",odo.getX(),odo.getY(),odo.getHeading());
 
             telemetry.update();
             dashboardTelemetry.update();
         }
+    }
+
+
+    private void configureOtos() {
+        telemetry.addLine("Configuring OTOS...");
+        telemetry.update();
+
+        // Set the desired units for linear and angular measurements. Can be either
+        // meters or inches for linear, and radians or degrees for angular. If not
+        // set, the default is inches and degrees. Note that this setting is not
+        // persisted in the sensor, so you need to set at the start of all your
+        // OpModes if using the non-default value.
+        // myOtos.setLinearUnit(DistanceUnit.METER);
+        myOtos.setLinearUnit(DistanceUnit.INCH);
+        // myOtos.setAngularUnit(AnguleUnit.RADIANS);
+        myOtos.setAngularUnit(AngleUnit.DEGREES);
+
+        // Assuming you've mounted your sensor to a robot and it's not centered,
+        // you can specify the offset for the sensor relative to the center of the
+        // robot. The units default to inches and degrees, but if you want to use
+        // different units, specify them before setting the offset! Note that as of
+        // firmware version 1.0, these values will be lost after a power cycle, so
+        // you will need to set them each time you power up the sensor. For example, if
+        // the sensor is mounted 5 inches to the left (negative X) and 10 inches
+        // forward (positive Y) of the center of the robot, and mounted 90 degrees
+        // clockwise (negative rotation) from the robot's orientation, the offset
+        // would be {-5, 10, -90}. These can be any value, even the angle can be
+        // tweaked slightly to compensate for imperfect mounting (eg. 1.3 degrees).
+        SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(0, 0, 0);
+        myOtos.setOffset(offset);
+
+        // Here we can set the linear and angular scalars, which can compensate for
+        // scaling issues with the sensor measurements. Note that as of firmware
+        // version 1.0, these values will be lost after a power cycle, so you will
+        // need to set them each time you power up the sensor. They can be any value
+        // from 0.872 to 1.127 in increments of 0.001 (0.1%). It is recommended to
+        // first set both scalars to 1.0, then calibrate the angular scalar, then
+        // the linear scalar. To calibrate the angular scalar, spin the robot by
+        // multiple rotations (eg. 10) to get a precise error, then set the scalar
+        // to the inverse of the error. Remember that the angle wraps from -180 to
+        // 180 degrees, so for example, if after 10 rotations counterclockwise
+        // (positive rotation), the sensor reports -15 degrees, the required scalar
+        // would be 3600/3585 = 1.004. To calibrate the linear scalar, move the
+        // robot a known distance and measure the error; do this multiple times at
+        // multiple speeds to get an average, then set the linear scalar to the
+        // inverse of the error. For example, if you move the robot 100 inches and
+        // the sensor reports 103 inches, set the linear scalar to 100/103 = 0.971
+        myOtos.setLinearScalar(1.0);
+        myOtos.setAngularScalar(1.0);
+
+        // The IMU on the OTOS includes a gyroscope and accelerometer, which could
+        // have an offset. Note that as of firmware version 1.0, the calibration
+        // will be lost after a power cycle; the OTOS performs a quick calibration
+        // when it powers up, but it is recommended to perform a more thorough
+        // calibration at the start of all your OpModes. Note that the sensor must
+        // be completely stationary and flat during calibration! When calling
+        // calibrateImu(), you can specify the number of samples to take and whether
+        // to wait until the calibration is complete. If no parameters are provided,
+        // it will take 255 samples and wait until done; each sample takes about
+        // 2.4ms, so about 612ms total
+        myOtos.calibrateImu();
+
+        // Reset the tracking algorithm - this resets the position to the origin,
+        // but can also be used to recover from some rare tracking errors
+        myOtos.resetTracking();
+
+        // After resetting the tracking, the OTOS will report that the robot is at
+        // the origin. If your robot does not start at the origin, or you have
+        // another source of location information (eg. vision odometry), you can set
+        // the OTOS location to match and it will continue to track from there.
+        SparkFunOTOS.Pose2D currentPosition = new SparkFunOTOS.Pose2D(0, 0, 0);
+        myOtos.setPosition(currentPosition);
+
+        // Get the hardware and firmware version
+        SparkFunOTOS.Version hwVersion = new SparkFunOTOS.Version();
+        SparkFunOTOS.Version fwVersion = new SparkFunOTOS.Version();
+        myOtos.getVersionInfo(hwVersion, fwVersion);
+
+        telemetry.addLine("OTOS configured! Press start to get position data!");
+        telemetry.addLine();
+        telemetry.addLine(String.format("OTOS Hardware Version: v%d.%d", hwVersion.major, hwVersion.minor));
+        telemetry.addLine(String.format("OTOS Firmware Version: v%d.%d", fwVersion.major, fwVersion.minor));
+        telemetry.update();
     }
 
 }
