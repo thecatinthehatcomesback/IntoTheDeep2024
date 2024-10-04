@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.teamcode;
 
+import static java.lang.Math.sqrt;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -26,7 +28,8 @@ public class CatProwl extends CatHW_Subsystem {
     public DcMotor rightRearMotor = null;
 
     SparkFunOTOS myOtos;
-
+    Pose2d targetPos;
+    double driveSpeed;
     public void init()throws InterruptedException{
 
         leftFrontMotor = hwMap.dcMotor.get("LFront");
@@ -45,8 +48,8 @@ public class CatProwl extends CatHW_Subsystem {
     }
 
     public void driveto(double x,double y,double theta,double speed,double timeout){
-        SparkFunOTOS.Pose2D pos = myOtos.getPosition();
-        Pose2d targetPos = new Pose2d(x,y,theta);
+        targetPos = new Pose2d(x,y,Math.toRadians(theta));
+        driveSpeed=speed;
         while(!pos.equals(targetPos) ){
             if(targetPos.getX()<0){
                 leftFrontMotor.setPower(-speed);
@@ -56,7 +59,22 @@ public class CatProwl extends CatHW_Subsystem {
             }
         }
     }
+    public void dodrive(){
+        SparkFunOTOS.Pose2D currentPos = myOtos.getPosition();
+        double dist = Math.sqrt( Math.pow(targetPos.getX() - currentPos.x , 2) + Math.pow(targetPos.getY() - currentPos.y,2) );
+        double theta=Math.atan2(targetPos.getY() - currentPos.y,targetPos.getX() - currentPos.x);
+        double rotDiff=targetPos.getHeading()-currentPos.h;
+        double ypow= Math.sin(theta)*driveSpeed;
+        double xpow= Math.cos(theta)*driveSpeed;
+        double rpow= Math.max(-1,Math.min(rotDiff/2,1));
+        double frontLeft = ypow + xpow;
 
+        double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
+        double frontLeftPower = (y + x + rx) / denominator;
+        double backLeftPower = (y - x + rx) / denominator;
+        double frontRightPower = (y - x - rx) / denominator;
+        double backRightPower = (y + x - rx) / denominator;
+    }
     public void driveto(double x,double y,double theta){
         driveto(x,y,theta,0.5,2.0);
     }
