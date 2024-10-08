@@ -39,6 +39,7 @@ public class CatHW_Async
     /** Other Hardware subSystems */
     CatHW_Jaws jaws = null;
     CatMecanumDrive drive = null;
+    CatProwl prowl=null;
 
     CatHW_Vision eyes = null;
     CatHW_Lights lights = null;
@@ -86,6 +87,8 @@ public class CatHW_Async
         opMode.telemetry.addData("Initialize", "Drive...");
         opMode.telemetry.update();
         drive = new CatMecanumDrive(hwMap);
+        prowl=new CatProwl(this);
+        prowl.init();
 
         launch= new CatHW_Launch(this);
         launch.init();
