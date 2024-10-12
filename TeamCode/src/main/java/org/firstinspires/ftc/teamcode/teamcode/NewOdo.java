@@ -358,7 +358,7 @@ public class NewOdo extends LinearOpMode
         // the origin. If your robot does not start at the origin, or you have
         // another source of location information (eg. vision odometry), you can set
         // the OTOS location to match and it will continue to track from there.
-        SparkFunOTOS.Pose2D currentPosition = new SparkFunOTOS.Pose2D(0, 0, Math.toRadians(90));
+        SparkFunOTOS.Pose2D currentPosition = new SparkFunOTOS.Pose2D(0, 0,(0));
         myOtos.setPosition(currentPosition);
 
         // Get the hardware and firmware version

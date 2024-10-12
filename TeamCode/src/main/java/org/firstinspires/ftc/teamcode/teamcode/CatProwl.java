@@ -72,7 +72,7 @@ public class CatProwl extends CatHW_Subsystem {
         // clockwise (negative rotation) from the robot's orientation, the offset
         // would be {-5, 10, -90}. These can be any value, even the angle can be
         // tweaked slightly to compensate for imperfect mounting (eg. 1.3 degrees).
-        SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(0, 0, 0);
+        SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(0, 0, -90);
         myOtos.setOffset(offset);
 
         // Here we can set the linear and angular scalars, which can compensate for
@@ -134,10 +134,10 @@ public class CatProwl extends CatHW_Subsystem {
     public void doDrive(){
         SparkFunOTOS.Pose2D currentPos = myOtos.getPosition();
         double dist = Math.sqrt( Math.pow(targetPos.getX() - currentPos.x , 2) + Math.pow(targetPos.getY() - currentPos.y,2) );
-        double theta=Math.atan2(targetPos.getY() - currentPos.y,targetPos.getX() - currentPos.x);
-        double rotDiff=targetPos.getHeading()-currentPos.h;
-        double ypow= Math.sin(theta)*driveSpeed;
-        double xpow= Math.cos(theta)*driveSpeed;
+        double motionAngle=Math.atan2(targetPos.getY() - currentPos.y,targetPos.getX() - currentPos.x);
+        double rotDiff=targetPos.getHeading()-Math.toRadians(currentPos.h);
+        double ypow= Math.cos(motionAngle-Math.toRadians(currentPos.h))*driveSpeed;
+        double xpow= -Math.sin(motionAngle)*driveSpeed;
         double rpow= Math.max(-1,Math.min(rotDiff/2,1));
 
 
@@ -151,8 +151,8 @@ public class CatProwl extends CatHW_Subsystem {
         leftRearMotor.setPower(backLeftPower);
         rightFrontMotor.setPower(frontRightPower);
         rightRearMotor.setPower(backRightPower);
-        Log.d("catbot",String.format("LF %.2f LR %.2f RF %.2f RR %.2f dist %.2f theta %.2f xpow %.2f ypow %.2f rpow %.2f " ,
-               frontLeftPower, backLeftPower, frontRightPower, backRightPower, dist, theta, xpow, ypow, rpow ));
+        Log.d("catbot",String.format(" cur %.2f %.2f %.2f target %.2f %.2f %.2f LF %.2f LR %.2f RF %.2f RR %.2f dist %.2f motionAngle %.2f xpow %.2f ypow %.2f rpow %.2f " ,
+                targetPos.getX(), targetPos.getY(), Math.toDegrees(targetPos.getHeading()),currentPos.x , currentPos.y, currentPos.h, frontLeftPower, backLeftPower, frontRightPower, backRightPower, dist, motionAngle, xpow, ypow, rpow ));
         if(dist<1.0){
             setDrivePowers(0,0,0,0);
             isDone=true;

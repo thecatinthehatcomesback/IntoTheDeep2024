@@ -118,25 +118,7 @@ public class NewMainAutonomous extends LinearOpMode {
              * Telemetry while waiting for PLAY:
              */
             //telemetry.addData("Pos","%.3f %.3f %.3f",robot.drive.realSense.getXPos(),robot.drive.realSense.getYPos(), robot.drive.realSense.getRotation());
-            dashboardTelemetry.addData("Analysis Left Red", robot.eyes.pipeline.avgLeftRed);
-            dashboardTelemetry.addData("Analysis Middle Red", robot.eyes.pipeline.avgMiddleRed);
-            dashboardTelemetry.addData("Analysis Right Red", robot.eyes.pipeline.avgRightRed);
-            dashboardTelemetry.addData("Analysis Left Blue", robot.eyes.pipeline.avgLeftBlue);
-            dashboardTelemetry.addData("Analysis Middle Blue", robot.eyes.pipeline.avgMiddleBlue);
-            dashboardTelemetry.addData("Analysis Right Blue", robot.eyes.pipeline.avgRightBlue);
-            //dashboardTelemetry.addData("Position", robot.eyes.pipeline.avgValue);
-            dashboardTelemetry.addData("Position", robot.eyes.getConePos());
-            telemetry.addData("Position", robot.eyes.getConePos());
-            //telemetry.addData("POS ","Is Left:%s", robot.isLeftAlliance);
-            if(robot.isLeftAlliance && robot.isRedAlliance){
-                telemetry.addData("Alliance","Red, Left");
-            }else if(!robot.isLeftAlliance && robot.isRedAlliance){
-                telemetry.addData("Alliance","Red, Right");
-            }else if(robot.isLeftAlliance && !robot.isRedAlliance){
-                telemetry.addData("Alliance","Blue, Left");
-            }else if(!robot.isLeftAlliance && !robot.isRedAlliance){
-                telemetry.addData("Alliance","Blue, Right");
-            }
+
             //telemetry.addData("Distance", robot.jaws.intakeDistance.getDistance(DistanceUnit.INCH));
 
             dashboardTelemetry.update();
