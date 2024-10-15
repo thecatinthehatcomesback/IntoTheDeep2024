@@ -142,9 +142,9 @@ public class NewMainAutonomous extends LinearOpMode {
 
         robot.robotWait(timeDelay);
 
-        robot.prowl.driveto(0,10,0,0.3,5);
-
-
+        robot.prowl.driveto(0,10,0,0.4,5);
+        robot.prowl.driveto(10,10,0,0.4,5);
+        robot.prowl.driveto(0,0,0,0.4,5);
 
         if(isStopRequested()) return;
 

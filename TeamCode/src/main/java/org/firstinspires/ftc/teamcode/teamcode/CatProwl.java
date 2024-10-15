@@ -16,6 +16,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 
@@ -42,9 +43,9 @@ public class CatProwl extends CatHW_Subsystem {
 
         // Define motor directions: //
         leftFrontMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontMotor.setDirection(DcMotor.Direction.FORWARD);
         leftRearMotor.setDirection(DcMotor.Direction.FORWARD);
-        rightRearMotor.setDirection(DcMotor.Direction.FORWARD);
+        rightFrontMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightRearMotor.setDirection(DcMotor.Direction.REVERSE);
 
         myOtos = hwMap.get(SparkFunOTOS.class, "sensor_otos");
         SparkFunOTOS.Pose2D pos = myOtos.getPosition();
@@ -72,7 +73,7 @@ public class CatProwl extends CatHW_Subsystem {
         // clockwise (negative rotation) from the robot's orientation, the offset
         // would be {-5, 10, -90}. These can be any value, even the angle can be
         // tweaked slightly to compensate for imperfect mounting (eg. 1.3 degrees).
-        SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(0, 0, -90);
+        SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(0, 0, 0);
         myOtos.setOffset(offset);
 
         // Here we can set the linear and angular scalars, which can compensate for
@@ -136,9 +137,9 @@ public class CatProwl extends CatHW_Subsystem {
         double dist = Math.sqrt( Math.pow(targetPos.getX() - currentPos.x , 2) + Math.pow(targetPos.getY() - currentPos.y,2) );
         double motionAngle=Math.atan2(targetPos.getY() - currentPos.y,targetPos.getX() - currentPos.x);
         double rotDiff=targetPos.getHeading()-Math.toRadians(currentPos.h);
-        double ypow= Math.cos(motionAngle-Math.toRadians(currentPos.h))*driveSpeed;
-        double xpow= -Math.sin(motionAngle)*driveSpeed;
-        double rpow= Math.max(-1,Math.min(rotDiff/2,1));
+        double ypow= Math.sin(motionAngle-Math.toRadians(currentPos.h))*driveSpeed;
+        double xpow= Math.cos(motionAngle)*driveSpeed;
+        double rpow= -Math.max(-1,Math.min(rotDiff/2,1));
 
 
         double denominator = Math.max(Math.abs(ypow) + Math.abs(xpow) + Math.abs(rpow), 1);
@@ -151,7 +152,7 @@ public class CatProwl extends CatHW_Subsystem {
         leftRearMotor.setPower(backLeftPower);
         rightFrontMotor.setPower(frontRightPower);
         rightRearMotor.setPower(backRightPower);
-        Log.d("catbot",String.format(" cur %.2f %.2f %.2f target %.2f %.2f %.2f LF %.2f LR %.2f RF %.2f RR %.2f dist %.2f motionAngle %.2f xpow %.2f ypow %.2f rpow %.2f " ,
+        Log.d("catbot",String.format(" tar %.2f %.2f %.2f cur %.2f %.2f %.2f LF %.2f LR %.2f RF %.2f RR %.2f dist %.2f motionAngle %.2f xpow %.2f ypow %.2f rpow %.2f " ,
                 targetPos.getX(), targetPos.getY(), Math.toDegrees(targetPos.getHeading()),currentPos.x , currentPos.y, currentPos.h, frontLeftPower, backLeftPower, frontRightPower, backRightPower, dist, motionAngle, xpow, ypow, rpow ));
         if(dist<1.0){
             setDrivePowers(0,0,0,0);
