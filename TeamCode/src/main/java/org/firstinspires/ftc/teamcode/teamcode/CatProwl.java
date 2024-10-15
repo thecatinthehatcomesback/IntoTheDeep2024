@@ -133,15 +133,25 @@ public class CatProwl extends CatHW_Subsystem {
         }
     }
     public void doDrive(){
+        double kPdrive=0.3;
+        double kIdrive=0.01;
+        double kDdrive=0.01;
+        double kProt=0.5;
+        double kIrot=0.01;
+        double kDrot=0.01;
+
+
         SparkFunOTOS.Pose2D currentPos = myOtos.getPosition();
         double dist = Math.sqrt( Math.pow(targetPos.getX() - currentPos.x , 2) + Math.pow(targetPos.getY() - currentPos.y,2) );
         double motionAngle=Math.atan2(targetPos.getY() - currentPos.y,targetPos.getX() - currentPos.x);
         double rotDiff=targetPos.getHeading()-Math.toRadians(currentPos.h);
-        double ypow= Math.sin(motionAngle-Math.toRadians(currentPos.h))*driveSpeed;
-        double xpow= Math.cos(motionAngle)*driveSpeed;
-        double rpow= -Math.max(-1,Math.min(rotDiff/2,1));
+        double drivePow=driveSpeed*dist*kPdrive;
+        double ypow= Math.sin(motionAngle-Math.toRadians(currentPos.h))*drivePow;
+        double xpow= Math.cos(motionAngle-Math.toRadians(currentPos.h))*drivePow;
+        double rotErr=rotDiff*kProt;
+        double rpow= -Math.max(-1,Math.min(rotErr,1));
 
-
+m
         double denominator = Math.max(Math.abs(ypow) + Math.abs(xpow) + Math.abs(rpow), 1);
         double frontLeftPower = (ypow + xpow + rpow) / denominator;
         double backLeftPower = (ypow - xpow + rpow) / denominator;
