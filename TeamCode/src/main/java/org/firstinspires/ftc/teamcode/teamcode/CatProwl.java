@@ -42,7 +42,7 @@ public class CatProwl extends CatHW_Subsystem {
         rightRearMotor = hwMap.dcMotor.get("rightRear");
 
         // Define motor directions: //
-        leftFrontMotor.setDirection(DcMotor.Direction.REVERSE);
+        leftFrontMotor.setDirection(DcMotor.Direction.FORWARD);
         leftRearMotor.setDirection(DcMotor.Direction.FORWARD);
         rightFrontMotor.setDirection(DcMotor.Direction.REVERSE);
         rightRearMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -151,7 +151,7 @@ public class CatProwl extends CatHW_Subsystem {
         double rotErr=rotDiff*kProt;
         double rpow= -Math.max(-1,Math.min(rotErr,1));
 
-m
+
         double denominator = Math.max(Math.abs(ypow) + Math.abs(xpow) + Math.abs(rpow), 1);
         double frontLeftPower = (ypow + xpow + rpow) / denominator;
         double backLeftPower = (ypow - xpow + rpow) / denominator;
@@ -188,5 +188,46 @@ m
         rightFrontMotor.setPower(rightFront);
         leftRearMotor.setPower(leftBack);
         rightRearMotor.setPower(rightBack);
+    }
+
+    public double findScalor(double leftFrontValue, double rightFrontValue,
+                             double leftBackValue, double rightBackValue) {
+        /*
+        PLANS:
+        1: Look at all motor values
+        2: Find the highest absolute value (the "scalor")
+        3: If the highest value is not more than 1.0, we don't need to change the values
+        4: But if it is higher than 1.0, we need to find the scale to get that value down to 1.0
+        5: Finally, we pass OUT the scale factor so that we can scale each motor down
+         */
+        double scalor = 0;
+        double scaleFactor;
+
+        double[] values;
+        values = new double[4];
+        values[0] = Math.abs(leftFrontValue);
+        values[1] = Math.abs(rightFrontValue);
+        values[2] = Math.abs(leftBackValue);
+        values[3] = Math.abs(rightBackValue);
+
+        // Find highest value:
+        for (int i = 0; i + 1 < values.length; i++) {
+            if (values[i] > scalor) {
+                scalor = values[i];
+            }
+        }
+
+        // If the highest absolute value is over 1.0, we need to get to work!  Otherwise, we done...
+        if (scalor > 1.0) {
+            // Get the reciprocal:
+            scaleFactor = 1.0 / scalor;
+        } else {
+            // Set to 1 so that we don't change anything we don't have to...
+            scaleFactor = 1.0;
+        }
+
+        // Now we have the scale factor!
+        return scaleFactor;
+        // After finding scale factor, we need to scale each motor power down by the same amount...
     }
 }

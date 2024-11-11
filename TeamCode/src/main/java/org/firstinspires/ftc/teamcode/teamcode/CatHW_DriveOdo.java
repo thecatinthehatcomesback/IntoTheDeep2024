@@ -312,30 +312,5 @@ public class CatHW_DriveOdo extends CatHW_Subsystem
         // Reset timer once called
         runTime.reset();
     }
-    /*public double getDistance(){
-        return (distanceSensor.getVoltage() - 0.16) * 83.3 + 10;
 
-    }*/
-
-
-
-
-    //----------------------------------------------------------------------------------------------
-    // isDone Method:
-    //----------------------------------------------------------------------------------------------
-
-    private static void rotatePoints(double[] xPoints, double[] yPoints, double angle) {
-        for (int i = 0; i < xPoints.length; i++) {
-            double x = xPoints[i];
-            double y = yPoints[i];
-            xPoints[i] = x * Math.cos(angle) - y * Math.sin(angle);
-            yPoints[i] = x * Math.sin(angle) + y * Math.cos(angle);
-        }
-    }
-
-
-    public void scoreHex(){
-        double theta = Math.atan((rightDistance.getDistance(DistanceUnit.INCH)-
-                leftDistance.getDistance(DistanceUnit.INCH))/(14+10));
-    }
 }

@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -10,7 +9,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.teamcode.drive.CatMecanumDrive;
 
 import java.util.concurrent.TimeUnit;
 
@@ -23,8 +21,8 @@ import java.util.concurrent.TimeUnit;
  *
  * @author FTC Team #10273, The Cat in the Hat Comes Back
  */
-@TeleOp(name = "NewOdo", group = "CatTeleOp")
-public class NewOdo extends LinearOpMode
+@TeleOp(name = "Cat Teleop", group = "CatTeleOp")
+public class CatTeleop extends LinearOpMode
 {
     /* Declare OpMode members. */
     private ElapsedTime elapsedGameTime = new ElapsedTime();
@@ -35,7 +33,7 @@ public class NewOdo extends LinearOpMode
 
 
     /* Constructor */
-    public NewOdo() {
+    public CatTeleop() {
         robot = new CatHW_Async();
     }
 
@@ -82,10 +80,6 @@ public class NewOdo extends LinearOpMode
             } else {
                 //robot.lights.setDefaultColor(RevBlinkinLedDriver.BlinkinPattern.BLUE);
             }
-            //dashboardTelemetry.addData("Analysis Right", robot.eyes.pipeline.avgRight);
-            //dashboardTelemetry.addData("Analysis Middle", robot.eyes.pipeline.avgMiddle);
-            //dashboardTelemetry.addData("Analysis Left", robot.eyes.pipeline.avgLeft);
-            //dashboardTelemetry.addData("Position", robot.eyes.pipeline.avgValue);
             dashboardTelemetry.update();
 
         }
@@ -159,7 +153,14 @@ public class NewOdo extends LinearOpMode
                 forward = forward - 0.4;
             }
             double turn = gamepad1.left_stick_x;
-
+            if (gamepad2.dpad_up){
+                double power = robot.jaws.armMotor.getPower();
+                robot.jaws.armMotor.setPower(power+0.001);
+            }
+            if (gamepad2.dpad_down){
+                double power = robot.jaws.armMotor.getPower();
+                robot.jaws.armMotor.setPower(power-0.001);
+            }
 
             // Input for setDrivePowers train and sets the dead-zones:
             leftFront = forward + strafe + turn;
@@ -168,122 +169,39 @@ public class NewOdo extends LinearOpMode
             rightBack = forward + strafe - turn;
 
             // Calculate the scale factor:
-            SF = robot.drive.findScalor(leftFront, rightFront, leftBack, rightBack);
+            SF = robot.prowl.findScalor(leftFront, rightFront, leftBack, rightBack);
             // Set powers to each setDrivePowers motor:
             leftFront = leftFront * SF * driveSpeed;
             rightFront = rightFront * SF * driveSpeed;
             leftBack = leftBack * SF * driveSpeed;
             rightBack = rightBack * SF * driveSpeed;
-
+            robot.prowl.setDrivePowers(leftFront,rightFront,leftBack,rightBack);
             currentTime = elapsedGameTime.milliseconds();
             avgT1 = avgT1 * 0.9 + (currentTime - lastTime) * 0.1;
 
-            if (gamepad1.a) {
-                alignMode = true;
-            }
+
+            //if(gamepad1.right_bumper){
+            //    robot.jaws.setArmAngle(30);
+           // } else if (gamepad1.left_bumper){
+            //    robot.jaws.setArmAngle(100);
+            //}
             // DRIVE!!!
-            robot.drive.updateDistance();
-            if (alignMode) {
-                if (Math.abs(forward) > .1 || Math.abs(strafe) > 0.1 || Math.abs(turn) > .1) {
-                    alignMode = false;
-                } else {
-                    alignMode = robot.drive.scoreHexTeleop();
 
-                }
-            } else {
-                robot.drive.setMotorPowers(leftFront, leftBack, rightBack, rightFront);
-
-            }
             currentTime = elapsedGameTime.milliseconds();
             avgT2 = avgT2 * 0.9 + (currentTime - lastTime) * 0.1;
 
-
-        /*if (gamepad1.x) {
-            robot.launch.launch();
-        } else{
-            robot.launch.arm();
-        }*/
-        /*if(gamepad1.left_trigger > .01){
-            robot.jaws.setRobotLift(0, gamepad1.left_trigger);
-        } else if(gamepad1.right_trigger > .01){
-            robot.jaws.setRobotLift(0, -gamepad1.right_trigger);
-        }else {
-            robot.jaws.setRobotLift(0,0);
-        }
-        if(gamepad1.left_trigger > .01){
-            robot.jaws.setRobotLift(0, gamepad1.left_trigger);
-        } else if(gamepad1.right_trigger > .01){
-            robot.jaws.setRobotLift(0, -gamepad1.right_trigger);
-        }else {
-            robot.jaws.setRobotLift(0,0);
-        }*/
-
-
-            //--------------------------------------------------------------------------------------
-            // Driver 2 Controls:
-            //--------------------------------------------------------------------------------------
-            if (gamepad2.dpad_down) {
-                robot.jaws.autoSetHexZero();
-            } else if (gamepad2.dpad_up) {
-                robot.jaws.setHexLiftHigh();
-            } else if (gamepad2.dpad_left) {
-                robot.jaws.setHexLiftMiddle();
-            }
-
-            if (gamepad2.left_trigger > .1) {
-                robot.jaws.setIntakePower(-1);
-            } else if (gamepad2.right_trigger > .1) {
-                robot.jaws.setIntakePower(1);
-            } else {
-                robot.jaws.setIntakePower(0);
-            }
-
-            if (gamepad2.x) {
-                robot.jaws.dispence();
-            } else {
-                robot.jaws.zeroPos();
-            }
-            if (gamepad2.right_stick_y > .1) {
-                robot.jaws.setRobotLift(0, gamepad2.right_stick_y);
-            } else if (gamepad2.right_stick_y < .1) {
-                robot.jaws.setRobotLift(0, gamepad2.right_stick_y);
-
-            } else {
-                robot.jaws.setRobotLift(0, 0);
-            }
-
-            if (-gamepad2.left_stick_y > .1) {
-                robot.jaws.bumpHexHeight(30);
-            } else if (-gamepad2.left_stick_y < -0.1) {
-                robot.jaws.bumpHexHeight(-30);
-            }
-
-            if (gamepad2.a && endGame) {
-                robot.jaws.launchDrone();
-            } else {
-                robot.jaws.droneSet();
-            }
             currentTime = elapsedGameTime.milliseconds();
             avgT3 = avgT3 * 0.9 + (currentTime - lastTime) * 0.1;
 
             //--------------------------------------------------------------------------------------
             // Telemetry Data:
             //--------------------------------------------------------------------------------------
-            //telemetry.addData("Power", "LF %.2f RF %.2f LB %.2f RB %.2f", robot.drive.leftFrontMotor.getPower(), robot.drive.rightFrontMotor.getPower(),robot.drive.leftRearMotor.getPower(),robot.drive.rightRearMotor.getPower());
-            //telemetry.addData("Power", "LF %s RF %s LB %s RB %s", robot.drive.leftFrontMotor.getDirection().toString(), robot.drive.rightFrontMotor.getDirection().toString(),robot.drive.leftRearMotor.getDirection().toString(),robot.drive.rightRearMotor.getDirection().toString());
             SparkFunOTOS.Pose2D pos = myOtos.getPosition();
             telemetry.addData("Game Timer", "%.2f", elapsedGameTime.time());
             telemetry.addData("Trigger", "Left %.2f right %.2f", gamepad1.left_trigger, gamepad1.right_trigger);
-            telemetry.addData("Lift", "%.2f power", (float) robot.jaws.liftHook.getPower());
-            telemetry.addData("Hex Lift", "cur: %d Tar: %d pow: %.1f", robot.jaws.hexLift.getCurrentPosition(), robot.jaws.hexLift.getTargetPosition(), robot.jaws.hexLift.getPower());
-            telemetry.addData("Distance", "L: %.2f R: %.2f", robot.drive.leftInches, robot.drive.rightInches);
             telemetry.addData("Loop Time", "%3.0f ms  %3.0f/%3.0f/%3.0f", avgLoopTime, avgT1, avgT2, avgT3);
             telemetry.addData("X/Y/Theta", "%3.1f %3.1f %3.1f",pos.x,pos.y,pos.h);
-
-            CatMecanumDrive drive = robot.drive;
-            drive.update();
-            Pose2d odo = drive.getPoseEstimate();
-            telemetry.addData("X/Y/Theta", "%3.1f %3.1f %3.1f",odo.getX(),odo.getY(),odo.getHeading());
+            telemetry.addData("armPower","%5.3f  pos %d",robot.jaws.armMotor.getPower(),robot.jaws.armMotor.getCurrentPosition());
 
             telemetry.update();
             dashboardTelemetry.update();

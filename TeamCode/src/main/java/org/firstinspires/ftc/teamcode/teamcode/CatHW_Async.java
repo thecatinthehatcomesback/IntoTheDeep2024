@@ -37,14 +37,14 @@ public class CatHW_Async
     private static CatHW_Async myInstance = null;
 
     /** Other Hardware subSystems */
-    CatHW_Jaws jaws = null;
-    CatMecanumDrive drive = null;
+   CatHW_Jaws jaws = null;
+    //CatMecanumDrive drive = null;
     CatProwl prowl=null;
 
-    CatHW_Vision eyes = null;
-    CatHW_Lights lights = null;
+    //CatHW_Vision eyes = null;
+    //CatHW_Lights lights = null;
 
-    CatHW_Launch launch = null;
+
 
 
     /* Constructor */
@@ -86,17 +86,9 @@ public class CatHW_Async
 
         opMode.telemetry.addData("Initialize", "Drive...");
         opMode.telemetry.update();
-        drive = new CatMecanumDrive(hwMap);
+       // drive = new CatMecanumDrive(hwMap);
         prowl=new CatProwl(this);
         prowl.init();
-
-        launch= new CatHW_Launch(this);
-        launch.init();
-
-       // opMode.telemetry.addData("Initialize", "Vision...");
-       // opMode.telemetry.update();
-        //eyes = new CatHW_Vision(this);
-        //eyes.initVision(hwMap);
 
         opMode.telemetry.addData("Initialize", "All Done...  BOOM!");
         opMode.telemetry.update();
@@ -118,7 +110,7 @@ public class CatHW_Async
         ElapsedTime delayTimer = new ElapsedTime();
         while (opMode.opModeIsActive() && (delayTimer.seconds() < seconds)) {
             opMode.idle();
-            //eyes.updateVuforia();
+
         }
     }
 }
