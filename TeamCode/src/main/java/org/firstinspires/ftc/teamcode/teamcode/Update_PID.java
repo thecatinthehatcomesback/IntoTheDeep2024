@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.teamcode;
 
-public class Update_PID implements Runnable {
+public class Update_PID extends Thread {
     boolean isStopRequested = false;
     public CatHW_Jaws jaws = null;
     public Update_PID(CatHW_Jaws Jaws){
@@ -16,10 +16,9 @@ public class Update_PID implements Runnable {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
         }
     }
-    public void stop(){
+    public void pleaseStop(){
         isStopRequested = true;
     }
 

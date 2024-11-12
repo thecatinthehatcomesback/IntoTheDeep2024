@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.teamcode;
 
+import android.util.Log;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -160,6 +162,8 @@ public class CatTeleop extends LinearOpMode
             if (gamepad2.dpad_down){
                 double power = robot.jaws.armMotor.getPower();
                 robot.jaws.armMotor.setPower(power-0.001);
+                Log.d("catbot",String.format("power-minus %.3f" ));
+
             }
 
             // Input for setDrivePowers train and sets the dead-zones:
@@ -180,11 +184,11 @@ public class CatTeleop extends LinearOpMode
             avgT1 = avgT1 * 0.9 + (currentTime - lastTime) * 0.1;
 
 
-            //if(gamepad1.right_bumper){
-            //    robot.jaws.setArmAngle(30);
-           // } else if (gamepad1.left_bumper){
-            //    robot.jaws.setArmAngle(100);
-            //}
+            if(gamepad1.right_bumper){
+                robot.jaws.setArmAngle(30);
+            } else if (gamepad1.left_bumper){
+                robot.jaws.setArmAngle(100);
+            }
             // DRIVE!!!
 
             currentTime = elapsedGameTime.milliseconds();
@@ -206,6 +210,7 @@ public class CatTeleop extends LinearOpMode
             telemetry.update();
             dashboardTelemetry.update();
         }
+        robot.jaws.ourThread.pleaseStop();
     }
 
 

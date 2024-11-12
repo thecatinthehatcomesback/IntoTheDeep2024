@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.teamcode;
 
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -33,18 +35,18 @@ public class CatHW_Jaws extends CatHW_Subsystem
     public ElapsedTime pidTimer = null;
     public int target;
     //values for pid
-    double kP = 0.008;
+    double kP = 0.012;
     double kI = 0.0;
-    double kD = 0.0;
-    double feedForword = 0.2;
+    double kD = 0.0003;
+    double feedForword = 0.3;
 
     double lastError;
     double lastTime;
 
-    public Update_PID ourThread;
+    public Update_PID ourThread = null;
     private static final double ticksPerRev = (3.61*5.23*28);
     private static final double ticksPerDegree = ticksPerRev/360;
-    private static final double maxPower= 0.4;
+    private static final double maxPower= 0.7;
 
     // Timers: //
 
@@ -61,8 +63,8 @@ public class CatHW_Jaws extends CatHW_Subsystem
         // Define and initialize motors: /armMotor/
 
         armMotor = hwMap.dcMotor.get("armMotorNew");
-        //armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         armExtend = hwMap.dcMotor.get("armExtend");
@@ -75,8 +77,7 @@ public class CatHW_Jaws extends CatHW_Subsystem
         pidTimer = new ElapsedTime();
 
         ourThread = new Update_PID(this);
-        Thread th = new Thread(ourThread,"update pid");
-        th.start();
+        ourThread.start();
     }
 
 
@@ -89,15 +90,15 @@ public class CatHW_Jaws extends CatHW_Subsystem
         target=((int)(degree*ticksPerDegree));
     }
     public void updatePID(){
-        int current = 0;//armMotor.getCurrentPosition();
-        double error = current-target;
+        int current = armMotor.getCurrentPosition();
+        double error = target-current;
         double angle = current/ticksPerDegree-30;
         double derivative = (error - lastError) / (pidTimer.seconds()-lastTime);
         double power = error * kP + derivative*kD + Math.cos(Math.toRadians(angle))*feedForword;
         power = Math.min(power,maxPower);
         power = Math.max(power,-maxPower);
-        //armMotor.setPower(power);
-
+        armMotor.setPower(power);
+        Log.d("catbot",String.format("arm err %.3f angle %.3f power %.3f der %.3f",error,angle,power,derivative));
         lastError=error;
         lastTime = pidTimer.seconds();
     }
