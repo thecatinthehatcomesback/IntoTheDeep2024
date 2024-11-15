@@ -35,16 +35,16 @@ public class CatHW_Jaws extends CatHW_Subsystem
     public ElapsedTime pidTimer = null;
     public int target;
     //values for pid
-    double kP = 0.012;
+    double kP = 0.003;
     double kI = 0.0;
     double kD = 0.0003;
-    double feedForword = 0.3;
+    double feedForword = 0.2;
 
     double lastError;
     double lastTime;
 
     public Update_PID ourThread = null;
-    private static final double ticksPerRev = (3.61*5.23*28);
+    private static final double ticksPerRev = (3.61*3.61*5.23*28);
     private static final double ticksPerDegree = ticksPerRev/360;
     private static final double maxPower= 0.7;
 
