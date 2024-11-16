@@ -60,6 +60,7 @@ public class CatHW_Jaws extends CatHW_Subsystem
     /* Initialize standard Hardware interfaces */
     public void init() {
 
+        target=0;
         // Define and initialize motors: /armMotor/
 
         armMotor = hwMap.dcMotor.get("armMotorNew");
@@ -68,7 +69,9 @@ public class CatHW_Jaws extends CatHW_Subsystem
         armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         armExtend = hwMap.dcMotor.get("armExtend");
-        armExtend.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        armExtend.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        armExtend.setTargetPosition(0);
+        armExtend.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armExtend.setDirection(DcMotorSimple.Direction.REVERSE);
 
         gripper = hwMap.servo.get("gripper");
@@ -88,6 +91,27 @@ public class CatHW_Jaws extends CatHW_Subsystem
 
     public void setArmAngle (double degree){
         target=((int)(degree*ticksPerDegree));
+    }
+    public double getArmAngle(){
+        return target;
+    }
+    public void closeGripper(){
+        gripper.setPosition(0.36);
+    }
+    public void openGripper(){
+        gripper.setPosition(0.3);
+    }
+    public void setExtendLong(){
+        armExtend.setTargetPosition(300);
+        armExtend.setPower(0.4);
+    }
+    public void setExtendMedium(){
+        armExtend.setTargetPosition(150);
+        armExtend.setPower(0.4);
+    }
+    public void setExtendShort(){
+        armExtend.setTargetPosition(0);
+        armExtend.setPower(0.4);
     }
     public void updatePID(){
         int current = armMotor.getCurrentPosition();
