@@ -93,7 +93,7 @@ public class CatHW_Jaws extends CatHW_Subsystem
         target=((int)(degree*ticksPerDegree));
     }
     public double getArmAngle(){
-        return target;
+        return target/ticksPerDegree;
     }
     public void closeGripper(){
         gripper.setPosition(0.36);
@@ -102,11 +102,11 @@ public class CatHW_Jaws extends CatHW_Subsystem
         gripper.setPosition(0.3);
     }
     public void setExtendLong(){
-        armExtend.setTargetPosition(300);
+        armExtend.setTargetPosition(1350);
         armExtend.setPower(0.4);
     }
     public void setExtendMedium(){
-        armExtend.setTargetPosition(150);
+        armExtend.setTargetPosition(650);
         armExtend.setPower(0.4);
     }
     public void setExtendShort(){
