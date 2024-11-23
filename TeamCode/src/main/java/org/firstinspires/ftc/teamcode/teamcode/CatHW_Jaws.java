@@ -44,9 +44,9 @@ public class CatHW_Jaws extends CatHW_Subsystem
     double lastTime;
 
     public Update_PID ourThread = null;
-    private static final double ticksPerRev = (3.61*5.23*28);
+    private static final double ticksPerRev = (3.61*3.61*5.23*28);
     private static final double ticksPerDegree = ticksPerRev/360;
-    private static final double maxPower= 0.7;
+    private static final double maxPower= 0.6;
 
     // Timers: //
 
@@ -102,16 +102,16 @@ public class CatHW_Jaws extends CatHW_Subsystem
         gripper.setPosition(0.3);
     }
     public void setExtendLong(){
-        armExtend.setTargetPosition(1350);
-        armExtend.setPower(0.4);
+        armExtend.setTargetPosition(2370);
+        armExtend.setPower(0.6);
     }
     public void setExtendMedium(){
-        armExtend.setTargetPosition(650);
-        armExtend.setPower(0.4);
+        armExtend.setTargetPosition(1100);
+        armExtend.setPower(0.6);
     }
     public void setExtendShort(){
         armExtend.setTargetPosition(0);
-        armExtend.setPower(0.4);
+        armExtend.setPower(0.6);
     }
     public void updatePID(){
         int current = armMotor.getCurrentPosition();
@@ -125,6 +125,10 @@ public class CatHW_Jaws extends CatHW_Subsystem
         Log.d("catbot",String.format("arm err %.3f angle %.3f power %.3f der %.3f",error,angle,power,derivative));
         lastError=error;
         lastTime = pidTimer.seconds();
+
+        if (Math.abs(armExtend.getCurrentPosition()-armExtend.getTargetPosition())<20){
+          armExtend.setPower(0);
+        }
     }
 
     //----------------------------------------------------------------------------------------------

@@ -126,9 +126,9 @@ public class CatTeleop extends LinearOpMode
             if (gamepad1.right_trigger > .1 || gamepad1.left_trigger > .1) {
                 driveSpeed = 1.00;
             } else if (gamepad1.right_bumper || gamepad1.left_bumper) {
-                driveSpeed = 0.50;
+                driveSpeed = 0.3;
             } else {
-                driveSpeed = 0.9;
+                driveSpeed = 0.75;
             }
 
             double forward = -((Math.abs(gamepad1.right_stick_y) < 0.05) ? 0 : gamepad1.right_stick_y);
@@ -201,10 +201,13 @@ public class CatTeleop extends LinearOpMode
             if (Math.abs(gamepad2.right_stick_y) > 0.1) {
                 int cur = robot.jaws.armExtend.getTargetPosition();
                 if (gamepad2.right_stick_y<0) {
-                    robot.jaws.armExtend.setTargetPosition(cur + 1);
+                    robot.jaws.armExtend.setTargetPosition(cur + 20);
+                    robot.jaws.armExtend.setPower(0.6);
                 }
                 else{
-                    robot.jaws.armExtend.setTargetPosition(cur - 1);
+                    robot.jaws.armExtend.setTargetPosition(cur - 20);
+                    robot.jaws.armExtend.setPower(0.6);
+
                 }
             }
             // DRIVE!!!

@@ -1,24 +1,14 @@
 package org.firstinspires.ftc.teamcode.teamcode;
 
-import static java.lang.Math.sqrt;
-
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
-import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import android.util.Log;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class CatProwl extends CatHW_Subsystem {
     public CatProwl(CatHW_Async mainHardware){
@@ -33,7 +23,10 @@ public class CatProwl extends CatHW_Subsystem {
 
     SparkFunOTOS myOtos;
     Pose2d targetPos;
+    Pose2d lastPos;
     double driveSpeed;
+    int wrap;
+
     public void init()throws InterruptedException{
 
         leftFrontMotor = hwMap.dcMotor.get("leftFront");
@@ -50,6 +43,7 @@ public class CatProwl extends CatHW_Subsystem {
         myOtos = hwMap.get(SparkFunOTOS.class, "sensor_otos");
         SparkFunOTOS.Pose2D pos = myOtos.getPosition();
         configureOtos();
+        wrap=0;
     }
     private void configureOtos() {
         // Set the desired units for linear and angular measurements. Can be either
@@ -128,11 +122,14 @@ public class CatProwl extends CatHW_Subsystem {
         targetPos = new Pose2d(x,y,Math.toRadians(theta));
         driveSpeed=speed;
         isDone = false;
-        while (!isDone){
+        ElapsedTime runTime=new ElapsedTime();
+        runTime.reset();
+        while (!isDone && runTime.seconds()<timeout){
             doDrive();
         }
     }
-    public void doDrive(){
+    public void
+    doDrive(){
         double kPdrive=0.3;
         double kIdrive=0.01;
         double kDdrive=0.01;
@@ -142,10 +139,16 @@ public class CatProwl extends CatHW_Subsystem {
 
 
         SparkFunOTOS.Pose2D currentPos = myOtos.getPosition();
+        /*if ((currentPos.h>90)&&(lastPos.h<-90)){
+            wrap=wrap-1;
+        }
+        if ((currentPos.h>90)&&(lastPos.h<-90)) {
+            wrap = wrap - 1;
+        }*/
         double dist = Math.sqrt( Math.pow(targetPos.getX() - currentPos.x , 2) + Math.pow(targetPos.getY() - currentPos.y,2) );
         double motionAngle=Math.atan2(targetPos.getY() - currentPos.y,targetPos.getX() - currentPos.x);
         double rotDiff=targetPos.getHeading()-Math.toRadians(currentPos.h);
-        double drivePow=driveSpeed*dist*kPdrive;
+        double drivePow=driveSpeed*Math.min(dist*kPdrive,1.0);
         double ypow= Math.sin(motionAngle-Math.toRadians(currentPos.h))*drivePow;
         double xpow= Math.cos(motionAngle-Math.toRadians(currentPos.h))*drivePow;
         double rotErr=rotDiff*kProt;
@@ -167,9 +170,8 @@ public class CatProwl extends CatHW_Subsystem {
         if(dist<1.0){
             setDrivePowers(0,0,0,0);
             isDone=true;
-
-
         }
+
     }
     public void driveto(double x,double y,double theta){
         driveto(x,y,theta,0.5,2.0);
