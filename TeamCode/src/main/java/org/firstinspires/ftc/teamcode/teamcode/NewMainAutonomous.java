@@ -84,23 +84,10 @@ public class   NewMainAutonomous extends LinearOpMode {
             }
             if (((gamepad1.x) && delayTimer.seconds() > 0.5)) {
                 // Changes Alliance Sides
-                if (robot.isRedAlliance && !robot.isLeftAlliance) {
-
-                    robot.isRedAlliance = true;
-                    robot.isLeftAlliance = true;
-
-                } else if (robot.isRedAlliance && robot.isLeftAlliance) {
-
-                    robot.isLeftAlliance = true;
-                    robot.isRedAlliance = false;
-                } else if (!robot.isRedAlliance && robot.isLeftAlliance) {
-
+                if (robot.isLeftAlliance) {
                     robot.isLeftAlliance = false;
-                    robot.isRedAlliance = false;
-                } else if (!robot.isRedAlliance && !robot.isLeftAlliance) {
-
-                    robot.isLeftAlliance = false;
-                    robot.isRedAlliance = true;
+                } else {
+                    robot.isLeftAlliance = true;
                 }
                 delayTimer.reset();
             }
@@ -111,10 +98,8 @@ public class   NewMainAutonomous extends LinearOpMode {
             /*
              * Telemetry while waiting for PLAY:
              */
-            //telemetry.addData("Pos","%.3f %.3f %.3f",robot.drive.realSense.getXPos(),robot.drive.realSense.getYPos(), robot.drive.realSense.getRotation());
-
-            //telemetry.addData("Distance", robot.jaws.intakeDistance.getDistance(DistanceUnit.INCH));
-
+            telemetry.addData("Time Delay ","%.0f  seconds",timeDelay);
+            telemetry.addData("Position ","%s",robot.isLeftAlliance ? "left":"right");
             dashboardTelemetry.update();
             telemetry.update();
 
@@ -135,8 +120,11 @@ public class   NewMainAutonomous extends LinearOpMode {
          */
 
         robot.robotWait(timeDelay);
-
-       left();
+        if (robot.isLeftAlliance) {
+            left();
+        } else {
+            right();
+        }
 
         robot.jaws.ourThread.pleaseStop();
 
@@ -149,39 +137,44 @@ public class   NewMainAutonomous extends LinearOpMode {
     }
     private void right(){
         robot.prowl.driveto(0,15,0,0.4,5);
-        robot.jaws.setArmAngle(90);
+        robot.jaws.setArmAngle(80);
         robot.robotWait(.5);
         robot.prowl.driveto(0,24,0,0.4,5);
-        robot.jaws.setExtendMedium();
+        robot.jaws.setExtendAuto();
         robot.robotWait(.5);
         robot.jaws.setArmAngle(60);
         robot.robotWait(1);
-        robot.prowl.driveto(0,5,0,0.6,5);
+        robot.prowl.driveto(0,5,0,0.6,2);
         robot.robotWait(.5);
         robot.jaws.openGripper();
         robot.robotWait(.5);
         robot.prowl.driveto(45,5,0,0.4,5);
 
-
-
-        robot.robotWait(5);
+        robot.robotWait(1);
     }
     private void left(){
 
-        robot.prowl.driveto(3,6,0,0.4,5);
-        robot.robotWait(.5);
-        robot.jaws.setArmAngle(75);
-        robot.robotWait(3);
+        robot.prowl.driveto(3,8,0,0.4,5);
+        robot.jaws.setArmAngle(68);
+        robot.robotWait(1);
         robot.jaws.setExtendLong();
-        robot.robotWait(3);
+        robot.robotWait(2);
         robot.jaws.openGripper();
         robot.robotWait(.5);
         robot.jaws.setExtendShort();
         robot.robotWait(.5);
-        robot.prowl.driveto(48,-1,180,0.4,5);
+        robot.prowl.driveto(24,-3,180,0.6,2);
+        robot.prowl.driveto(48,-3,180,0.6,2);
+        robot.prowl.driveto(48,6,180,0.6,2);
+        robot.prowl.driveto(3,10,170,0.6,2.5);
+        robot.prowl.driveto(48,6,180,0.8,5);
+        robot.prowl.driveto(48,16,180,0.6,5);
+        robot.prowl.driveto(3,16,180,0.6,2.5);
+        robot.prowl.driveto(48,16,180,0.8,5);
+        robot.prowl.driveto(48,-8,180,0.6,5);
+        robot.jaws.setExtendLong();
+        robot.jaws.setArmAngle(50);
         robot.robotWait(.5);
-
-
 
     }
 }

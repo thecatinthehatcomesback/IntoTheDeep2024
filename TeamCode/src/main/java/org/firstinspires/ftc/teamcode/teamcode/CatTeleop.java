@@ -199,15 +199,11 @@ public class CatTeleop extends LinearOpMode
                 robot.jaws.setExtendLong();
             }
             if (Math.abs(gamepad2.right_stick_y) > 0.1) {
-                int cur = robot.jaws.armExtend.getTargetPosition();
                 if (gamepad2.right_stick_y<0) {
-                    robot.jaws.armExtend.setTargetPosition(cur + 20);
-                    robot.jaws.armExtend.setPower(0.6);
+                    robot.jaws.bumpExtend(20);
                 }
                 else{
-                    robot.jaws.armExtend.setTargetPosition(cur - 20);
-                    robot.jaws.armExtend.setPower(0.6);
-
+                    robot.jaws.bumpExtend(-20);
                 }
             }
             // DRIVE!!!

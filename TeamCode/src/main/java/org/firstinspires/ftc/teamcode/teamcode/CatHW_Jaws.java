@@ -99,19 +99,50 @@ public class CatHW_Jaws extends CatHW_Subsystem
         gripper.setPosition(0.36);
     }
     public void openGripper(){
-        gripper.setPosition(0.3);
+        gripper.setPosition(0.22);
     }
     public void setExtendLong(){
         armExtend.setTargetPosition(2370);
-        armExtend.setPower(0.6);
+        if (armExtend.getTargetPosition()>armExtend.getCurrentPosition()){
+            armExtend.setPower(0.6);
+        }else {
+            armExtend.setPower(0.3);
+        }
     }
     public void setExtendMedium(){
         armExtend.setTargetPosition(1100);
-        armExtend.setPower(0.6);
+        if (armExtend.getTargetPosition()>armExtend.getCurrentPosition()){
+            armExtend.setPower(0.6);
+        }else {
+            armExtend.setPower(0.3);
+        }
+
+    }
+    public void setExtendAuto(){
+        armExtend.setTargetPosition(1200);
+        if (armExtend.getTargetPosition()>armExtend.getCurrentPosition()){
+            armExtend.setPower(0.6);
+        }else {
+            armExtend.setPower(0.3);
+        }
     }
     public void setExtendShort(){
         armExtend.setTargetPosition(0);
-        armExtend.setPower(0.6);
+        if (armExtend.getTargetPosition()>armExtend.getCurrentPosition()){
+            armExtend.setPower(0.6);
+        }else {
+            armExtend.setPower(0.3);
+        }
+    }
+    public void bumpExtend(int bumpFactor){
+        int cur = armExtend.getTargetPosition();
+
+        armExtend.setTargetPosition(cur + bumpFactor);
+        if (armExtend.getTargetPosition()>armExtend.getCurrentPosition()){
+            armExtend.setPower(0.6);
+        }else {
+            armExtend.setPower(0.3);
+        }
     }
     public void updatePID(){
         int current = armMotor.getCurrentPosition();

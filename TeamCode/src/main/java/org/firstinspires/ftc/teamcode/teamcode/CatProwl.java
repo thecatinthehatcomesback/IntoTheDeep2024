@@ -23,7 +23,7 @@ public class CatProwl extends CatHW_Subsystem {
 
     SparkFunOTOS myOtos;
     Pose2d targetPos;
-    Pose2d lastPos;
+    SparkFunOTOS.Pose2D lastPos;
     double driveSpeed;
     int wrap;
 
@@ -43,6 +43,7 @@ public class CatProwl extends CatHW_Subsystem {
         myOtos = hwMap.get(SparkFunOTOS.class, "sensor_otos");
         SparkFunOTOS.Pose2D pos = myOtos.getPosition();
         configureOtos();
+        lastPos = new SparkFunOTOS.Pose2D(0,0,0);
         wrap=0;
     }
     private void configureOtos() {
@@ -139,12 +140,17 @@ public class CatProwl extends CatHW_Subsystem {
 
 
         SparkFunOTOS.Pose2D currentPos = myOtos.getPosition();
-        /*if ((currentPos.h>90)&&(lastPos.h<-90)){
+        if ((currentPos.h>90)&&(lastPos.h<-90)){
             wrap=wrap-1;
         }
-        if ((currentPos.h>90)&&(lastPos.h<-90)) {
-            wrap = wrap - 1;
-        }*/
+        if ((currentPos.h<-90)&&(lastPos.h>90)) {
+            wrap = wrap + 1;
+        }
+        lastPos.x = currentPos.x;
+        lastPos.y = currentPos.y;
+        lastPos.h = currentPos.h;
+        currentPos.h=currentPos.h+(360*wrap);
+
         double dist = Math.sqrt( Math.pow(targetPos.getX() - currentPos.x , 2) + Math.pow(targetPos.getY() - currentPos.y,2) );
         double motionAngle=Math.atan2(targetPos.getY() - currentPos.y,targetPos.getX() - currentPos.x);
         double rotDiff=targetPos.getHeading()-Math.toRadians(currentPos.h);
@@ -165,8 +171,8 @@ public class CatProwl extends CatHW_Subsystem {
         leftRearMotor.setPower(backLeftPower);
         rightFrontMotor.setPower(frontRightPower);
         rightRearMotor.setPower(backRightPower);
-        Log.d("catbot",String.format(" tar %.2f %.2f %.2f cur %.2f %.2f %.2f LF %.2f LR %.2f RF %.2f RR %.2f dist %.2f motionAngle %.2f xpow %.2f ypow %.2f rpow %.2f " ,
-                targetPos.getX(), targetPos.getY(), Math.toDegrees(targetPos.getHeading()),currentPos.x , currentPos.y, currentPos.h, frontLeftPower, backLeftPower, frontRightPower, backRightPower, dist, motionAngle, xpow, ypow, rpow ));
+        Log.d("catbot",String.format("tar %.1f %.1f %.0f cur %.1f %.1f %.0f %.0f wr: %d LF %.2f LR %.2f RF %.2f RR %.2f dist %.2f motionAngle %.2f xpow %.2f ypow %.2f rpow %.2f " ,
+                targetPos.getX(), targetPos.getY(), Math.toDegrees(targetPos.getHeading()),currentPos.x , currentPos.y, currentPos.h,lastPos.h, wrap, frontLeftPower, backLeftPower, frontRightPower, backRightPower, dist, motionAngle, xpow, ypow, rpow ));
         if(dist<1.0){
             setDrivePowers(0,0,0,0);
             isDone=true;
