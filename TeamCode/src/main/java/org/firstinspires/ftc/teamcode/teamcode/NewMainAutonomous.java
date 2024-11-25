@@ -152,10 +152,10 @@ public class   NewMainAutonomous extends LinearOpMode {
 
         robot.robotWait(1);
     }
-    private void left(){
+    private void left() {
 
-        robot.prowl.driveto(3,8,0,0.4,5);
-        robot.jaws.setArmAngle(68);
+        robot.prowl.driveto(3, 7, 0, 0.4, 5);
+        robot.jaws.setArmAngle(72);
         robot.robotWait(1);
         robot.jaws.setExtendLong();
         robot.robotWait(2);
@@ -163,17 +163,19 @@ public class   NewMainAutonomous extends LinearOpMode {
         robot.robotWait(.5);
         robot.jaws.setExtendShort();
         robot.robotWait(.5);
-        robot.prowl.driveto(24,-3,180,0.6,2);
-        robot.prowl.driveto(48,-3,180,0.6,2);
-        robot.prowl.driveto(48,6,180,0.6,2);
-        robot.prowl.driveto(3,10,170,0.6,2.5);
-        robot.prowl.driveto(48,6,180,0.8,5);
-        robot.prowl.driveto(48,16,180,0.6,5);
-        robot.prowl.driveto(3,16,180,0.6,2.5);
-        robot.prowl.driveto(48,16,180,0.8,5);
-        robot.prowl.driveto(48,-8,180,0.6,5);
+        robot.prowl.driveto(24, -3, 180, 0.6, 2);
+        robot.prowl.driveto(48, -3, 180, 0.6, 2);
+        robot.prowl.driveto(48, 5, 180, 0.6, 2);
+        robot.prowl.driveto(3, 10, 170, 0.6, 2.5);
+        robot.prowl.driveto(48, 6, 180, 0.8, 5);
+        robot.prowl.driveto(48, 16, 180, 0.6, 5);
+        robot.prowl.driveto(3, 16, 180, 0.6, 2.5);
+        robot.prowl.driveto(48, 22, 180, 0.8, 5);
+        robot.prowl.driveto(3, 22, 180, 0.6, 2.5);
+        robot.prowl.driveto(48, 16, 180, 0.8, 5);
+        robot.prowl.driveto(48, -8, 180, 0.6, 5);
         robot.jaws.setExtendLong();
-        robot.jaws.setArmAngle(50);
+        robot.jaws.setArmAngle(60);
         robot.robotWait(.5);
 
     }
