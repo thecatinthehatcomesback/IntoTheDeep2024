@@ -221,7 +221,8 @@ public class CatTeleop extends LinearOpMode
             telemetry.addData("Game Timer", "%.2f", elapsedGameTime.time());
             telemetry.addData("Loop Time", "%3.0f ms  %3.0f/%3.0f/%3.0f", avgLoopTime, avgT1, avgT2, avgT3);
             telemetry.addData("X/Y/Theta", "%3.1f %3.1f %3.1f",pos.x,pos.y,pos.h);
-            telemetry.addData("armPower","%5.3f  pos %d",robot.jaws.armMotor.getPower(),robot.jaws.armMotor.getCurrentPosition());
+            telemetry.addData("armPower","%5.3f  angle %.0f pos %d tar %d" ,robot.jaws.armMotor.getPower(),
+                    robot.jaws.getArmCurAngle(),robot.jaws.armMotor.getCurrentPosition(),robot.jaws.target);
             telemetry.addData("gripper","%.2f",robot.jaws.gripper.getPosition());
             telemetry.addData("extend","cur %d target %d",robot.jaws.armExtend.getCurrentPosition(),robot.jaws.armExtend.getTargetPosition());
             telemetry.update();

@@ -46,6 +46,7 @@ public class CatHW_Jaws extends CatHW_Subsystem
     public Update_PID ourThread = null;
     private static final double ticksPerRev = (3.61*3.61*5.23*28);
     private static final double ticksPerDegree = ticksPerRev/360;
+    private static final double startAngle=-12;
     private static final double maxPower= 0.6;
 
     // Timers: //
@@ -90,10 +91,14 @@ public class CatHW_Jaws extends CatHW_Subsystem
     //----------------------------------------------------------------------------------------------
 
     public void setArmAngle (double degree){
-        target=((int)(degree*ticksPerDegree));
+        target=((int)((degree+startAngle)*ticksPerDegree));
     }
     public double getArmAngle(){
-        return target/ticksPerDegree;
+        return (target/ticksPerDegree)+startAngle;
+
+    }
+    public double getArmCurAngle() {
+        return (armMotor.getCurrentPosition() / ticksPerDegree)+startAngle;
     }
     public void closeGripper(){
         gripper.setPosition(0.36);
