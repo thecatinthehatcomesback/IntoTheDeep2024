@@ -91,7 +91,7 @@ public class CatHW_Jaws extends CatHW_Subsystem
     //----------------------------------------------------------------------------------------------
 
     public void setArmAngle (double degree){
-        target=((int)((degree+startAngle)*ticksPerDegree));
+        target=((int)((degree-startAngle)*ticksPerDegree));
     }
     public double getArmAngle(){
         return (target/ticksPerDegree)+startAngle;
