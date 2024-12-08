@@ -29,7 +29,8 @@ public class CatHW_Jaws extends CatHW_Subsystem
     public DcMotor armMotor = null;
     public DcMotor armExtend = null;
 
-    public Servo gripper = null;
+   public Servo gripper = null;
+    public Servo wrist = null;
 
     public ElapsedTime liftTime = null;
     public ElapsedTime pidTimer = null;
@@ -76,6 +77,8 @@ public class CatHW_Jaws extends CatHW_Subsystem
         armExtend.setDirection(DcMotorSimple.Direction.REVERSE);
 
         gripper = hwMap.servo.get("gripper");
+        wrist = hwMap.servo.get("wrist");
+
 
         liftTime = new ElapsedTime();
         pidTimer = new ElapsedTime();
@@ -86,7 +89,7 @@ public class CatHW_Jaws extends CatHW_Subsystem
 
 
 
-    //----------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------e
     // Jaw Methods:
     //----------------------------------------------------------------------------------------------
 
@@ -105,6 +108,12 @@ public class CatHW_Jaws extends CatHW_Subsystem
     }
     public void openGripper(){
         gripper.setPosition(0.22);
+    }
+    public void upWrist(){
+        wrist.setPosition(0.22);
+    }
+    public void downWrist(){
+        wrist.setPosition(0.36);
     }
     public void setExtendLong(){
         armExtend.setTargetPosition(2370);

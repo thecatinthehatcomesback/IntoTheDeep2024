@@ -189,6 +189,12 @@ public class CatTeleop extends LinearOpMode
                 robot.jaws.gripper.setPosition(robot.jaws.gripper.getPosition()+0.003);
 
             }
+            if (gamepad2.right_stick_x>0.3) {
+                robot.jaws.wrist.setPosition(robot.jaws.wrist.getPosition()+0.003);
+            }
+            if (gamepad2.right_stick_x<-0.3) {
+                robot.jaws.wrist.setPosition(robot.jaws.wrist.getPosition()-0.003);
+            }
             if (gamepad2.cross){
                 robot.jaws.setExtendShort();
             }
@@ -224,6 +230,8 @@ public class CatTeleop extends LinearOpMode
             telemetry.addData("armPower","%5.3f  angle %.0f pos %d tar %d" ,robot.jaws.armMotor.getPower(),
                     robot.jaws.getArmCurAngle(),robot.jaws.armMotor.getCurrentPosition(),robot.jaws.target);
             telemetry.addData("gripper","%.2f",robot.jaws.gripper.getPosition());
+            telemetry.addData("wrist","%.2f",robot.jaws.wrist.getPosition());
+
             telemetry.addData("extend","cur %d target %d",robot.jaws.armExtend.getCurrentPosition(),robot.jaws.armExtend.getTargetPosition());
             telemetry.update();
             dashboardTelemetry.update();
