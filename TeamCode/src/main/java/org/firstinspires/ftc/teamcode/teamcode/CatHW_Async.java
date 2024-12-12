@@ -27,7 +27,7 @@ public class CatHW_Async
      */
 
 
-    public static boolean isLeftAlliance = false;
+    public static boolean isLeftAlliance = true;
     public static boolean isRedAlliance = false;
 
 

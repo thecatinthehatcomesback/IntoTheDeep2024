@@ -29,16 +29,17 @@ public class CatHW_Jaws extends CatHW_Subsystem
     public DcMotor armMotor = null;
     public DcMotor armExtend = null;
 
-    public Servo gripper = null;
+   public Servo gripper = null;
+    public Servo wrist = null;
 
     public ElapsedTime liftTime = null;
     public ElapsedTime pidTimer = null;
     public int target;
     //values for pid
-    double kP = 0.003;
+    double kP = 0.002;
     double kI = 0.0;
     double kD = 0.0003;
-    double feedForword = 0.2;
+    double feedForword = 0.4;
 
     double lastError;
     double lastTime;
@@ -46,7 +47,8 @@ public class CatHW_Jaws extends CatHW_Subsystem
     public Update_PID ourThread = null;
     private static final double ticksPerRev = (3.61*3.61*5.23*28);
     private static final double ticksPerDegree = ticksPerRev/360;
-    private static final double maxPower= 0.7;
+    private static final double startAngle=-12;
+    private static final double maxPower= 0.6;
 
     // Timers: //
 
@@ -60,6 +62,7 @@ public class CatHW_Jaws extends CatHW_Subsystem
     /* Initialize standard Hardware interfaces */
     public void init() {
 
+        target=0;
         // Define and initialize motors: /armMotor/
 
         armMotor = hwMap.dcMotor.get("armMotorNew");
@@ -68,10 +71,14 @@ public class CatHW_Jaws extends CatHW_Subsystem
         armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         armExtend = hwMap.dcMotor.get("armExtend");
-        armExtend.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        armExtend.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        armExtend.setTargetPosition(0);
+        armExtend.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armExtend.setDirection(DcMotorSimple.Direction.REVERSE);
 
         gripper = hwMap.servo.get("gripper");
+        wrist = hwMap.servo.get("wrist");
+
 
         liftTime = new ElapsedTime();
         pidTimer = new ElapsedTime();
@@ -82,12 +89,74 @@ public class CatHW_Jaws extends CatHW_Subsystem
 
 
 
-    //----------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------e
     // Jaw Methods:
     //----------------------------------------------------------------------------------------------
 
     public void setArmAngle (double degree){
-        target=((int)(degree*ticksPerDegree));
+        target=((int)((degree-startAngle)*ticksPerDegree));
+    }
+    public double getArmAngle(){
+        return (target/ticksPerDegree)+startAngle;
+
+    }
+    public double getArmCurAngle() {
+        return (armMotor.getCurrentPosition() / ticksPerDegree)+startAngle;
+    }
+    public void closeGripper(){
+        gripper.setPosition(0.36);
+    }
+    public void openGripper(){
+        gripper.setPosition(0.22);
+    }
+    public void upWrist(){
+        wrist.setPosition(0.22);
+    }
+    public void downWrist(){
+        wrist.setPosition(0.36);
+    }
+    public void setExtendLong(){
+        armExtend.setTargetPosition(2603);
+        if (armExtend.getTargetPosition()>armExtend.getCurrentPosition()){
+            armExtend.setPower(0.6);
+        }else {
+            armExtend.setPower(0.3);
+        }
+    }
+    public void setExtendMedium(){
+        armExtend.setTargetPosition(1100);
+        if (armExtend.getTargetPosition()>armExtend.getCurrentPosition()){
+            armExtend.setPower(0.6);
+        }else {
+            armExtend.setPower(0.3);
+        }
+
+    }
+    public void setExtendAuto(){
+        armExtend.setTargetPosition(1200);
+        if (armExtend.getTargetPosition()>armExtend.getCurrentPosition()){
+            armExtend.setPower(0.6);
+        }else {
+            armExtend.setPower(0.3);
+        }
+    }
+    public void setExtendShort(){
+        armExtend.setTargetPosition(0);
+        if (armExtend.getTargetPosition()>armExtend.getCurrentPosition()){
+            armExtend.setPower(0.6);
+        }else {
+            armExtend.setPower(0.3);
+        }
+    }
+    public void bumpExtend(int bumpFactor){
+        int cur = armExtend.getTargetPosition();
+
+        armExtend.setTargetPosition(cur + bumpFactor);
+        if (armExtend.getTargetPosition()>armExtend.getCurrentPosition()){
+            armExtend.setPower(0.6);
+        }else {
+            armExtend.setPower(0.3);
+        }
     }
     public void updatePID(){
         int current = armMotor.getCurrentPosition();
@@ -101,6 +170,10 @@ public class CatHW_Jaws extends CatHW_Subsystem
         Log.d("catbot",String.format("arm err %.3f angle %.3f power %.3f der %.3f",error,angle,power,derivative));
         lastError=error;
         lastTime = pidTimer.seconds();
+
+        if (Math.abs(armExtend.getCurrentPosition()-armExtend.getTargetPosition())<20){
+          armExtend.setPower(0);
+        }
     }
 
     //----------------------------------------------------------------------------------------------
