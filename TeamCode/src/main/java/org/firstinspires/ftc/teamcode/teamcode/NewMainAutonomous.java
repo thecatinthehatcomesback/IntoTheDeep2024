@@ -166,10 +166,15 @@ public class   NewMainAutonomous extends LinearOpMode {
         robot.jaws.openGripper();
         robot.robotWait(.5);
         robot.jaws.setArmAngle(90);
-        robot.robotWait(1);
+        robot.robotWait(.25);
         robot.jaws.setExtendMedium();
-        robot.robotWait(.5);
         robot.prowl.driveto(8, 7, -110, 0.6, 2);
+        robot.jaws.setArmAngle(80);
+        robot.robotWait(.5);
+        robot.jaws.setArmAngle(50);
+        robot.robotWait(.5);
+        robot.jaws.setArmAngle(20);
+        robot.robotWait(.5);
         robot.jaws.gripper.setPosition(.28);
         robot.jaws.setArmAngle(10);
         robot.robotWait(5);
