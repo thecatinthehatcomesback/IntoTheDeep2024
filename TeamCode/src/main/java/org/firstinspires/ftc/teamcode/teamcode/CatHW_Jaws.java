@@ -36,10 +36,10 @@ public class CatHW_Jaws extends CatHW_Subsystem
     public ElapsedTime pidTimer = null;
     public int target;
     //values for pid
-    double kP = 0.012;
+    double kP = 0.002;
     double kI = 0.0;
     double kD = 0.0003;
-    double feedForword = 0.3;
+    double feedForword = 0.4;
 
     double lastError;
     double lastTime;
@@ -116,7 +116,7 @@ public class CatHW_Jaws extends CatHW_Subsystem
         wrist.setPosition(0.36);
     }
     public void setExtendLong(){
-        armExtend.setTargetPosition(2370);
+        armExtend.setTargetPosition(2603);
         if (armExtend.getTargetPosition()>armExtend.getCurrentPosition()){
             armExtend.setPower(0.6);
         }else {
