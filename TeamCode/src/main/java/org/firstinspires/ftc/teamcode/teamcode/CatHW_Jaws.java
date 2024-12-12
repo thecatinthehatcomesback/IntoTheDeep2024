@@ -113,10 +113,10 @@ public class CatHW_Jaws extends CatHW_Subsystem
         wrist.setPosition(0.22);
     }
     public void downWrist(){
-        wrist.setPosition(0.36);
+        wrist.setPosition(.7);
     }
     public void setExtendLong(){
-        armExtend.setTargetPosition(2603);
+        armExtend.setTargetPosition(3400);
         if (armExtend.getTargetPosition()>armExtend.getCurrentPosition()){
             armExtend.setPower(0.6);
         }else {
