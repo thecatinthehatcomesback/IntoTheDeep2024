@@ -39,7 +39,7 @@ public class CatHW_Jaws extends CatHW_Subsystem
     double kP = 0.002;
     double kI = 0.0;
     double kD = 0.0003;
-    double feedForword = 0.4;
+    double feedForword = 0.3;
 
     double lastError;
     double lastTime;
@@ -161,9 +161,14 @@ public class CatHW_Jaws extends CatHW_Subsystem
     public void updatePID(){
         int current = armMotor.getCurrentPosition();
         double error = target-current;
-        double angle = current/ticksPerDegree-30;
+        double angle = (current / ticksPerDegree)+startAngle;
         double derivative = (error - lastError) / (pidTimer.seconds()-lastTime);
-        double power = error * kP + derivative*kD + Math.cos(Math.toRadians(angle))*feedForword;
+        double power = 0;
+        if (target/ticksPerDegree > 0) {
+            power = error * kP + derivative * kD + Math.cos(Math.toRadians(angle)) * feedForword;
+        } else {
+            power = error * kP + derivative * kD ;
+        }
         power = Math.min(power,maxPower);
         power = Math.max(power,-maxPower);
         armMotor.setPower(power);
