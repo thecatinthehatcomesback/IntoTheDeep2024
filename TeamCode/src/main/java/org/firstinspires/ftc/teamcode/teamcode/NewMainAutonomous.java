@@ -159,31 +159,72 @@ public class   NewMainAutonomous extends LinearOpMode {
     private void left() {
 
 
-        robot.prowl.driveto(0, 6, 0, 0.4, 5);
+        robot.prowl.driveto(0, 4, 0, 0.5, 5);
+        robot.jaws.setArmAngle(83);
+        robot.jaws.setExtendLong();
+        robot.robotWait(2.5);
+        robot.jaws.downWrist();
+        robot.robotWait(1);
+        robot.jaws.openGripper();
+        robot.robotWait(.25);
+        robot.jaws.setArmAngle(90);
+        //scored in high basket
+        robot.prowl.driveto(3, 3, 0, 0.5, 5);
+        robot.jaws.setExtendMedium();
+        robot.robotWait(.5);
+        robot.prowl.driveto(7, 5, -110, 0.6, 2);
+        robot.jaws.setArmAngle(80);
+        robot.robotWait(2);
+        robot.jaws.gripper.setPosition(0);
+        robot.robotWait(.25);
+        robot.jaws.setArmAngle(0);
+        robot.robotWait(.5);
+        robot.jaws.setArmAngle(-12);
+        robot.robotWait(1);
+        robot.jaws.closeGripper();
+        robot.robotWait(.25);
+        robot.jaws.setArmAngle(80);
+        robot.robotWait(.25);
+        //1st cicle
+        robot.prowl.driveto(2, 6, 0, 0.5, 5);
         robot.jaws.setArmAngle(80);
         robot.jaws.setExtendLong();
         robot.robotWait(2.5);
         robot.jaws.downWrist();
-        robot.robotWait(1.25);
+        robot.robotWait(.5);
         robot.jaws.openGripper();
-        robot.robotWait(.5);
-        robot.jaws.setArmAngle(90);
-        robot.prowl.driveto(3, 3, 0, 0.4, 5);
-        robot.jaws.setExtendMedium();
-        robot.robotWait(2);
-        robot.prowl.driveto(9, 5, -110, 0.6, 2);
-        robot.jaws.setArmAngle(80);
-        /*robot.robotWait(.5);
-        robot.jaws.setArmAngle(50);
-        robot.robotWait(.5);
-        robot.jaws.setArmAngle(20);*/
-        robot.robotWait(.5);
-        robot.jaws.gripper.setPosition(0);
-        robot.jaws.setArmAngle(-10);
         robot.robotWait(.25);
+        robot.jaws.setArmAngle(90);
+        //score in high basket2nd timer
+        //robot.prowl.driveto(3, 3, 0, 0.4, 5);
+        robot.prowl.driveto(14, 17, -110, 0.7, 2);
+        robot.jaws.setArmAngle(84);
+        robot.jaws.setExtendMedium();
+        robot.robotWait(2.5);
+        robot.jaws.setArmAngle(10);
+        robot.jaws.gripper.setPosition(0);
+        robot.robotWait(.25);
+        robot.jaws.setArmAngle(0);
+        robot.robotWait(.5);
+        robot.jaws.setArmAngle(-12);
+        robot.robotWait(1);
         robot.jaws.closeGripper();
         robot.robotWait(.25);
         robot.jaws.setArmAngle(80);
+        robot.robotWait(.25);
+        robot.prowl.driveto(2, 9, 0, 0.5, 5);
+        robot.jaws.setArmAngle(80);
+        robot.jaws.setExtendLong();
+        robot.robotWait(2);
+        robot.jaws.downWrist();
+        robot.robotWait(.5);
+        robot.jaws.openGripper();
+        robot.robotWait(.5);
+        robot.jaws.setArmAngle(90);
+        robot.prowl.driveto(0, -50, 0, 1, 5);
+
+
+
 
         robot.robotWait(5);
        /* robot.prowl.driveto(48, -3, 180, 0.6, 2);
