@@ -153,56 +153,59 @@ public class   NewMainAutonomous extends LinearOpMode {
         robot.prowl.driveto(45,5,0,0.4,5);
 
         robot.robotWait(5);
-        robot.prowl.driveto(0,0,0,0.2,5);
 
     }
     private void left() {
 
-
-        robot.prowl.driveto(0, 4, 0, 0.5, 5);
-        robot.jaws.setArmAngle(83);
+        robot.jaws.setArmAngle(90);
+        robot.prowl.driveto(0, 5, 0, 0.5, 5);
         robot.jaws.setExtendLong();
+        robot.jaws.upWrist();
         robot.robotWait(2.5);
         robot.jaws.downWrist();
-        robot.robotWait(1);
-        robot.jaws.openGripper();
-        robot.robotWait(.25);
-        robot.jaws.setArmAngle(90);
+        robot.jaws.setArmAngle(85);
+        robot.robotWait(.75);
         //scored in high basket
-        robot.prowl.driveto(3, 3, 0, 0.5, 5);
-        robot.jaws.setExtendMedium();
+        //robot.prowl.driveto(3, 3, 0, 0.5, 5);
+        robot.jaws.openGripper();
+        robot.jaws.upWrist();
         robot.robotWait(.5);
-        robot.prowl.driveto(8, 2, -105, 0.6, 2);
-        robot.jaws.setArmAngle(80);
+        robot.jaws.setArmAngle(100);
+        robot.jaws.setExtendMedium();
+        //go get 2st sample
+        robot.prowl.driveto(10, 7, -105, 0.6, 2);
+        robot.jaws.downWrist();
         robot.robotWait(2);
         robot.jaws.gripper.setPosition(0);
         robot.robotWait(.25);
         robot.jaws.setArmAngle(0);
-        robot.robotWait(.5);
+        robot.robotWait(1);
         robot.jaws.setArmAngle(-12);
         robot.robotWait(1);
         robot.jaws.closeGripper();
         robot.robotWait(.25);
         robot.jaws.setArmAngle(80);
         robot.robotWait(.25);
-        //1st cicle
-        robot.prowl.driveto(4, 5, 0, 0.5, 5);
-        robot.jaws.setArmAngle(85);
+        //score 2nd sample
+        robot.prowl.driveto(4, 8, 0, 0.5, 5);
+        robot.jaws.setArmAngle(100);
         robot.jaws.setExtendLong();
         robot.robotWait(2.5);
         robot.jaws.downWrist();
+        robot.jaws.setArmAngle(85);
         robot.robotWait(.5);
         robot.jaws.openGripper();
+        robot.jaws.upWrist();
         robot.robotWait(.25);
         robot.jaws.setArmAngle(90);
         //score in high basket2nd timer
-        //robot.prowl.driveto(3, 3, 0, 0.4, 5);
-        robot.prowl.driveto(15, 16, -105, 0.7, 2);
+        robot.prowl.driveto(11, 13, -105, 0.7, 2);
         robot.jaws.setArmAngle(90);
         robot.jaws.setExtendMedium();
         robot.robotWait(3);
         robot.jaws.setArmAngle(10);
         robot.jaws.gripper.setPosition(0);
+        robot.jaws.downWrist();
         robot.robotWait(.25);
         robot.jaws.setArmAngle(0);
         robot.robotWait(.5);
@@ -211,21 +214,26 @@ public class   NewMainAutonomous extends LinearOpMode {
         robot.jaws.closeGripper();
         robot.robotWait(.25);
         robot.jaws.setArmAngle(80);
+        //picked up 3rd block
         robot.robotWait(.25);
-        robot.prowl.driveto(7 , 11, 0, 0.5, 5);
-        robot.jaws.setArmAngle(85);
+        robot.prowl.driveto(4 , 6, 0, 0.5, 5);
+        robot.jaws.setArmAngle(100);
         robot.jaws.setExtendLong();
         robot.robotWait(2.5);
         robot.jaws.downWrist();
+        robot.jaws.setArmAngle(85);
         robot.robotWait(.5);
         robot.jaws.openGripper();
         robot.robotWait(.5);
+        //scored 3rd block
         robot.jaws.setArmAngle(90);
+        robot.jaws.upWrist();
+        robot.robotWait(.5);
         robot.prowl.driveto(0, -55, 0, 1, 5);
         robot.jaws.setArmAngle(90);
         robot.jaws.setExtendShort();
-        robot.jaws.upWrist();
         robot.jaws.closeGripper();
+        //parked
 
         robot.robotWait(5);
        /* robot.prowl.driveto(48, -3, 180, 0.6, 2);

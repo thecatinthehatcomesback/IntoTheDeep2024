@@ -116,7 +116,7 @@ public class CatHW_Jaws extends CatHW_Subsystem
         wrist.setPosition(.7);
     }
     public void setExtendLong(){
-        armExtend.setTargetPosition(3400);
+        armExtend.setTargetPosition(3300);
         if (armExtend.getTargetPosition()>armExtend.getCurrentPosition()){
             armExtend.setPower(0.6);
         }else {
@@ -178,6 +178,10 @@ public class CatHW_Jaws extends CatHW_Subsystem
 
         if (Math.abs(armExtend.getCurrentPosition()-armExtend.getTargetPosition())<20){
           armExtend.setPower(0);
+        }
+        //limit extension distence
+        if ((angle<45) && (armExtend.getTargetPosition()>2625)){
+            armExtend.setTargetPosition(2625);
         }
     }
 

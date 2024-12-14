@@ -173,7 +173,11 @@ public class CatTeleop extends LinearOpMode
             }
             if (Math.abs(gamepad2.left_stick_y) > 0.1) {
                 double cur=robot.jaws.getArmAngle();
-                cur=cur-gamepad2.left_stick_y;
+                if (cur > 60) {
+                    cur = cur - (gamepad2.left_stick_y / 2);
+                } else {
+                    cur = cur - gamepad2.left_stick_y;
+                }
                 robot.jaws.setArmAngle(cur);
             }
             if (gamepad2.left_bumper){
