@@ -181,7 +181,7 @@ public class CatHW_Jaws extends CatHW_Subsystem
         }
         //limit extension distence
         if ((angle<45) && (armExtend.getTargetPosition()>2625)){
-            armExtend.setTargetPosition(2625);
+            armExtend.setTargetPosition(2100);
         }
     }
 
