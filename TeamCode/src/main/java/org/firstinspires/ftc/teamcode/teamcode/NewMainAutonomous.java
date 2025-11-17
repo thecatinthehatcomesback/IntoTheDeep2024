@@ -54,6 +54,7 @@ public class   NewMainAutonomous extends LinearOpMode {
 
         robot.init(hardwareMap, this);
         robot.jaws.closeGripper();
+        CatHW_Jaws.didAuto = true;
 
 
 

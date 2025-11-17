@@ -46,7 +46,8 @@ public class CatTeleop extends LinearOpMode
         Telemetry dashboardTelemetry = dashboard.getTelemetry();
 
         // Initialize the hardware
-        robot.init(hardwareMap, this);
+
+
 
         // All the configuration for the OTOS is done in this helper method, check it ou
         // Finished!  Now tell the driver...

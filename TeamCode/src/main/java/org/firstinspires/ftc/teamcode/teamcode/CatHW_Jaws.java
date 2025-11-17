@@ -49,7 +49,7 @@ public class CatHW_Jaws extends CatHW_Subsystem
     private static final double ticksPerDegree = ticksPerRev/360;
     private static final double startAngle=-12;
     private static final double maxPower= 0.6;
-
+    public static boolean didAuto = false;
     // Timers: //
 
     /* Constructor */
@@ -66,7 +66,9 @@ public class CatHW_Jaws extends CatHW_Subsystem
         // Define and initialize motors: /armMotor/
 
         armMotor = hwMap.dcMotor.get("armMotorNew");
-        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        if(!didAuto) {
+            armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
         armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
